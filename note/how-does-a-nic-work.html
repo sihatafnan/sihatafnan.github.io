@@ -1,0 +1,60 @@
+---
+title: How Does A NIC Work?
+---
+<!DOCTYPE html>
+<html lang="en-us">
+    {% include head.html %}
+    <body>
+        {% include navigation.html %}
+        <br><br>
+        <div class="container">
+        <h1>How Does A NIC Work?</h1>
+        <p>
+            <i>Posted: Sep 29, 2023</i>
+        </p>
+        <p>
+            I was thinking about keeping some technical notes on my website that might also be useful for others. Here goes my first note on NIC, which is an important component in computer networks.
+        </p>
+        <p>
+            Network Interface Card (NIC) is a specialized hardware that connects a computer machine to a network. Network packets received by an application first reaches the NIC through wired/wireless medium and then copied to main memory. Packets sent from host applications are copied from main memory to NIC, which then sends it to the network. The NIC is connected to the host CPU via a wide bus (generally 8-lane or 16-lane Peripheral Component Interconnect Express (PCIe)). A NIC driver running on the host system communicates with the NIC through this bus.
+        </p>
+        <div class="img-container">
+            <img width=400 height=175 src="/img/note/nic/Mellanox-MCX515A-CCAT-100G-NIC.jpg" alt="Mellanox NIC">
+            <img src="/img/note/nic/NIC-Comps.png" alt="NIC components" 
+            style="padding-left: 100px; padding-top: 100px; width: 500px; height: 300px;">
+        </div>
+        <p style="text-align: center;">
+            Figure 1: (Left) NVIDIA Mellanox MCX515A-CCAT 1x100GB NIC. (Right) NIC key components.
+        </p>
+        <p>
+The main functional components of a NIC are shown in the figure above. The Converter right next to the ports contain encode/decode unit and Serializer-Deserializer(SerDes) module. The encode/decode unit converts between electrical and digital form of data. The SerDes module enables high speed transmission by converting between serial data sent over network and parallel data processed in the CPU. The Packetization function detects the packet boundaries and may also perform link layer tasks. The Converter and Packetization module together performs MAC and PHY layer responsibilities. The buffer memory in NIC is made of expensive SRAM to provide fast access. However, this also means the buffer memory is very small, typically in the order of hundreds of kilobytes to several megabytes. The Direct Memory Access (DMA) engine moves data from/to main memory without consuming host CPU cycles. The Controller unit communicates with host and also controls data movement within NIC.
+        </p>
+        <div class="img-container">
+            <img width=500 height=250 src="/img/note/nic/NIC-Packet-Transmission.png" alt="NIC transmit path">
+            <img width=600 height=250 src="/img/note/nic/NIC-Packet-Receive.png" alt="NIC receive path" style="padding-left: 100px;">
+        </div>
+        <p style="text-align: center;">
+            <br>
+            Figure 2: (Left) Transmitting packet. (Right) Receiving packet. 
+        </p>
+        <p>
+            The figure above shows the methods for transmitting and receiving packets. To transmit packets, the host processor creates a descriptor containing the address and length of the packet data in main memory. This descriptor is transferred to NIC over PCIe. The NIC memory used in this transfer is accessible both by the host system and NIC. The NIC Controller reads the descriptor and invokes the Direct Memory Access (DMA) engine to copy the packet from the main memory to a buffer memory in the NIC. The MAC then starts moving the packet from transmit buffer and sends it over the network. Finally, the Controller informs the host processor that the packet is sent. This is typically done by generating an interrupt on host.
+        </p>
+        <p>
+            Receiving packets is done in the reverse way. After receiving the data from network and transforming it into a network packet, it is moved to the receive buffer in NIC. The host system pre-allocated some part of main memory for receiving packets and transferred their location to the NIC beforehand. The NIC controller DMAs the packet to one of these locations in main memory. After the packet is completely moved, the controller generates an interrupt to inform the host system about the received packet.
+        </p>
+        <p>
+            This was a very high-level overview of the components and packet transfer mechanism in NIC. Over time, more logical and hardware components were added to NIC to fully utilize the high network bandwidth.
+        </p>
+        <h3>
+            References:
+        </h3>
+        <p>
+            1. A Reconfigurable and Programmable Gigabit Ethernet Network. https://www.cs.rice.edu/CS/Architecture/docs/shafer-tree0611.pdf
+        </p>
+        </div>
+        {% include tail-scripts.html %}
+        {% include footer.html %}
+        
+    </body>
+</html>
