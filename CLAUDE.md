@@ -1,6 +1,6 @@
 # sihatafnan.github.io
 
-Personal academic website for **Sihat Afnan**, PhD student in Computer Science at UC Irvine. Built with Jekyll, served by GitHub Pages at the `main` branch.
+Personal academic website for **Sihat Afnan**, PhD Researcher in Computer Science at UC Irvine. Built with Jekyll, served by GitHub Pages at the `main` branch.
 
 ## Owner snapshot (source: `Resume.pdf`)
 

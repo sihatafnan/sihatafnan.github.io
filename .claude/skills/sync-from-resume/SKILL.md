@@ -14,7 +14,7 @@ description: Compare every site section against `Resume.pdf` and report a punch 
 
 | Resume section            | Site partial                  | What to check                                                              |
 |---------------------------|-------------------------------|----------------------------------------------------------------------------|
-| Header (name/email/role)  | `_includes/about.html`        | Name, current title ("PhD student" — not "Graduate Fellow"), email, links  |
+| Header (name/email/role)  | `_includes/about.html`        | Name, current title ("PhD Researcher" — not "Graduate Fellow"), email, links  |
 | Education                 | `_includes/about.html`        | Both UCI + BUET entries, correct dates, correct degree names               |
 | Graduate Courses at UCI   | `_includes/coursework.html`   | Every course on the resume appears; no stale undergrad-only courses        |
 | Experience                | `_includes/experience.html`   | TA role at UCI (Sept 2024 – Present), BRAC Lecturer, Spectrum ML Engineer  |
