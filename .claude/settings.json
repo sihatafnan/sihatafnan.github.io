@@ -24,10 +24,13 @@
       "Bash(grep -rn:*)",
       "Bash(rg:*)",
       "Bash(open http://127.0.0.1:4000)",
-      "Bash(curl -sI http://127.0.0.1:4000)"
+      "Bash(curl -sI http://127.0.0.1:4000)",
+      "Bash(git push)",
+      "Bash(git push origin main)"
     ],
     "deny": [
-      "Bash(git push:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
       "Bash(git reset --hard:*)",
       "Bash(git clean:*)",
       "Bash(rm -rf:*)",
