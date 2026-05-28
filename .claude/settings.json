@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bundle install)",
+      "Bash(bundle exec jekyll serve:*)",
+      "Bash(bundle exec jekyll build:*)",
+      "Bash(jekyll serve:*)",
+      "Bash(jekyll build:*)",
+      "Bash(gem install:*)",
+      "Bash(git status)",
+      "Bash(git status:*)",
+      "Bash(git diff)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git branch:*)",
+      "Bash(git stash:*)",
+      "Bash(ls:*)",
+      "Bash(find . -type f -name *.html)",
+      "Bash(find . -type f -name *.css)",
+      "Bash(find . -type f -name *.js)",
+      "Bash(grep -rn:*)",
+      "Bash(rg:*)",
+      "Bash(open http://127.0.0.1:4000)",
+      "Bash(curl -sI http://127.0.0.1:4000)"
+    ],
+    "deny": [
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Bash(rm -rf:*)",
+      "Bash(./push.sh:*)"
+    ]
+  }
+}
