@@ -183,7 +183,7 @@ def s2_bulk_year(venue_str: str, year: int, refresh: bool = False) -> dict[str, 
             time.sleep(2)
         cache.write_text(json.dumps(records, indent=1, ensure_ascii=False), encoding="utf-8")
         time.sleep(1.0)
-    return {norm_title(rec.get("title", "")): rec for rec in records if rec.get("title")}
+    return records
 
 
 def apply_s2(p: dict, rec: dict) -> None:
@@ -213,9 +213,9 @@ ABSTRACT_PATTERNS = {
 
 
 def scrape_page(key: str, url: str | None) -> str | None:
-    """Return cached page HTML for a venue landing page (or None)."""
-    if not url:
-        return None
+    """Return cached page HTML for a venue *HTML* landing page (or None)."""
+    if not url or url.lower().endswith(".pdf"):
+        return None  # PDFs are handled by abstract_from_pdf, not HTML scraping
     host_ok = (key == "uss" and "usenix.org" in url) or (key == "ndss" and "ndss-symposium.org" in url)
     if not host_ok:
         return None
@@ -244,6 +244,59 @@ def extract_abstract(key: str, text: str) -> str | None:
     return None
 
 
+def fetch_arxiv_abstract(arxiv_id: str | None) -> str | None:
+    if not arxiv_id:
+        return None
+    CACHE.mkdir(parents=True, exist_ok=True)
+    cache = CACHE / f"arxiv-{slugify(arxiv_id)}.txt"
+    if cache.exists():
+        return cache.read_text(encoding="utf-8", errors="ignore") or None
+    try:
+        r = requests.get("http://export.arxiv.org/api/query",
+                         params={"id_list": arxiv_id}, headers=API_UA, timeout=60)
+        if r.status_code != 200:
+            return None
+        m = re.search(r"<summary>(.*?)</summary>", r.text, re.S)
+        abs_txt = re.sub(r"\s+", " ", m.group(1)).strip() if m else ""
+        cache.write_text(abs_txt, encoding="utf-8")
+        time.sleep(0.5)
+        return abs_txt or None
+    except requests.RequestException:
+        return None
+
+
+def abstract_from_pdf(pdf_url: str | None) -> str | None:
+    """Last resort: pull the Abstract section out of an open-access PDF."""
+    if not pdf_url:
+        return None
+    try:
+        from pdftext import get_text
+    except ImportError:
+        return None
+    txt = get_text(pdf_url, max_chars=8000)
+    if not txt:
+        return None
+    m = re.search(r"(?is)\babstract\b\s*[—:.\-—]*\s*(.+)", txt)
+    if not m:
+        return None
+    seg = m.group(1)
+    # Cut at the first section header (line-anchored; handles "I. INTRODUCTION").
+    cut = re.search(
+        r"(?im)^\s*(?:[1iI][.)]?\s*)?(?:introduction|keywords?|ccs concepts|"
+        r"categories and subject)\b",
+        seg,
+    )
+    if cut and cut.start() > 150:
+        seg = seg[: cut.start()]
+    seg = seg[:2600]
+    ligatures = {"ﬁ": "fi", "ﬂ": "fl", "ﬀ": "ff", "ﬃ": "ffi", "ﬄ": "ffl"}
+    for bad, good in ligatures.items():
+        seg = seg.replace(bad, good)
+    seg = seg.replace("-\n", "").replace("‐\n", "")  # de-hyphenate line breaks
+    seg = re.sub(r"\s+", " ", seg).strip()
+    return seg if len(seg) > 120 else None
+
+
 def extract_pdf(key: str, text: str) -> str | None:
     # Prefer the paper PDF over slides/extended/appendix variants.
     pdfs = re.findall(r'href="([^"]+\.pdf)"', text)
@@ -269,35 +322,68 @@ def parse_years(spec: str) -> list[int]:
 
 def ingest_venue(key: str, years: list[int], refresh: bool = False) -> None:
     display, venue_str = VENUES[key]
+    # Build a GLOBAL S2 index across a padded year range. S2's edition-year can be
+    # off-by-one vs DBLP (esp. IEEE S&P), so matching strictly within a year loses
+    # abstracts. DOI is an exact key, so pooling extra years is safe.
+    by_doi, by_title = {}, {}
+    for sy in range(min(years) - 1, max(years) + 2):
+        for rec in s2_bulk_year(venue_str, sy, refresh=refresh):
+            d = (rec.get("externalIds") or {}).get("DOI")
+            if d:
+                by_doi.setdefault(d.lower(), rec)
+            if rec.get("title"):
+                by_title.setdefault(norm_title(rec["title"]), rec)
+    log(f"[{key}] global S2 index: {len(by_doi)} by DOI, {len(by_title)} by title")
+
     all_papers: list[dict] = []
     for y in years:
         papers = fetch_dblp_year(key, y, refresh=refresh)
-        s2 = s2_bulk_year(venue_str, y, refresh=refresh)
         matched = 0
         for p in papers:
-            rec = s2.get(norm_title(p["title"]))
+            rec = (by_doi.get(p["doi"].lower()) if p.get("doi") else None) or by_title.get(norm_title(p["title"]))
             if rec:
                 apply_s2(p, rec)
                 matched += 1
-        # Scrape venue landing pages to fill missing abstracts and PDF links.
+        # Scrape venue HTML landing pages (USENIX/NDSS) for missing abstracts + PDF links.
         scraped = 0
         for p in papers:
-            if p.get("abstract") and p.get("pdf"):
+            # NDSS (and some older) ee links ARE the open PDF; expose it as the PDF.
+            if not p.get("pdf") and (p.get("url") or "").lower().endswith(".pdf"):
+                p["pdf"] = p["url"]
+            if p.get("abstract"):
                 continue
             text = scrape_page(key, p.get("url"))
             if not text:
                 continue
-            if not p.get("abstract"):
-                ab = extract_abstract(key, text)
-                if ab:
-                    p["abstract"] = ab
-                    scraped += 1
+            ab = extract_abstract(key, text)
+            if ab:
+                p["abstract"] = ab
+                scraped += 1
             if not p.get("pdf"):
                 pdf = extract_pdf(key, text)
                 if pdf:
                     p["pdf"] = pdf
+        # arXiv fallback (all venues; great for 2018-2019 where S2 lacks abstracts).
+        arx = 0
+        for p in papers:
+            if not p.get("abstract") and p.get("arxiv"):
+                ab = fetch_arxiv_abstract(p["arxiv"])
+                if ab:
+                    p["abstract"] = ab
+                    arx += 1
+        # Open-access PDF text fallback (NDSS PDFs; any openAccessPdf).
+        pdfx = 0
+        for p in papers:
+            if p.get("abstract"):
+                continue
+            pdf_url = p.get("pdf") or (p["url"] if (p.get("url") or "").lower().endswith(".pdf") else None)
+            ab = abstract_from_pdf(pdf_url)
+            if ab:
+                p["abstract"] = ab
+                pdfx += 1
         have_abs = sum(1 for p in papers if p.get("abstract"))
-        log(f"  {key} {y}: {len(papers)} papers | s2-matched {matched} | scraped {scraped} | abstracts {have_abs}/{len(papers)}")
+        log(f"  {key} {y}: {len(papers)} papers | s2 {matched} | scraped {scraped} | "
+            f"arxiv {arx} | pdf {pdfx} | abstracts {have_abs}/{len(papers)}")
         all_papers.extend(papers)
 
     out_dir = DATA / key

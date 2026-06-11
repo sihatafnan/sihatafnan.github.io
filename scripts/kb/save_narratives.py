@@ -23,12 +23,23 @@ TOPICS_OUT = ROOT / "scripts" / "kb" / "build" / "topics"
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", required=True)
-    ap.add_argument("--venue", default="uss")
+    ap.add_argument("--venues", default="uss,ndss,sp,ccs")
     args = ap.parse_args()
 
-    venue_data = json.loads((ASSETS / f"{args.venue}.json").read_text(encoding="utf-8"))
-    by_id = {p["id"]: p for p in venue_data["papers"]}
-    tax = {t["slug"]: t for t in venue_data["topics"]}
+    by_id: dict[str, dict] = {}
+    tax: dict[str, dict] = {}
+    venues_present: list[str] = []
+    for vk in [v.strip() for v in args.venues.split(",") if v.strip()]:
+        path = ASSETS / f"{vk}.json"
+        if not path.exists():
+            continue
+        d = json.loads(path.read_text(encoding="utf-8"))
+        venues_present.append(vk)
+        for p in d["papers"]:
+            by_id[p["id"]] = p
+        for t in d["topics"]:
+            tax.setdefault(t["slug"], t)
+    venue_data = {"venue": "the Big Four"}
 
     results = json.loads(Path(args.results).read_text(encoding="utf-8"))
     if isinstance(results, dict):
@@ -56,7 +67,7 @@ def main() -> None:
             "description": tax.get(slug, {}).get("description", ""),
             "narrative": r.get("narrative", ""),
             "milestones": milestones,
-            "venues": [args.venue],
+            "venues": venues_present,
         }
         (TOPICS_OUT / f"{slug}.json").write_text(
             json.dumps(topic, ensure_ascii=False, indent=1), encoding="utf-8")
