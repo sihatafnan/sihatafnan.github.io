@@ -1,0 +1,204 @@
+{
+ "version": 1,
+ "note": "Seed research-area taxonomy for the Big-Four security KB. Each paper is classified into 1-3 of these. 'keywords' aid both LLM classification and client-side search.",
+ "topics": [
+  {
+   "slug": "web-security",
+   "name": "Web & Browser Security",
+   "description": "Attacks and defenses for the web platform: browsers, JavaScript, the DOM, web apps, and server-side web code.",
+   "keywords": ["web", "browser", "javascript", "xss", "csrf", "dom", "same-origin", "cookie", "http", "tls", "phishing", "webassembly", "extension", "single sign-on", "oauth", "session"]
+  },
+  {
+   "slug": "network-security",
+   "name": "Network Security",
+   "description": "Security of network protocols and infrastructure: routing, DNS, BGP, middleboxes, DDoS, and traffic analysis.",
+   "keywords": ["network", "dns", "bgp", "routing", "tcp", "ddos", "firewall", "middlebox", "packet", "ip spoofing", "traffic analysis", "intrusion detection", "ipv6"]
+  },
+  {
+   "slug": "applied-crypto",
+   "name": "Applied Cryptography",
+   "description": "Practical cryptographic constructions, attacks on deployed crypto, and crypto engineering.",
+   "keywords": ["cryptography", "encryption", "cipher", "aes", "rsa", "elliptic curve", "hash", "signature", "key", "random number", "crypto library", "post-quantum"]
+  },
+  {
+   "slug": "crypto-protocols",
+   "name": "Cryptographic Protocols",
+   "description": "Design and analysis of cryptographic protocols such as TLS, key exchange, messaging, and PKI.",
+   "keywords": ["tls", "ssl", "key exchange", "handshake", "pki", "certificate", "signal", "messaging", "noise protocol", "authenticated encryption", "protocol analysis", "formal verification protocol"]
+  },
+  {
+   "slug": "ml-security",
+   "name": "Adversarial Machine Learning",
+   "description": "Adversarial examples, poisoning, backdoors, evasion, and robustness of ML models.",
+   "keywords": ["adversarial example", "adversarial machine learning", "poisoning", "backdoor", "evasion", "robustness", "neural network attack", "deepfake", "model robustness", "trojan"]
+  },
+  {
+   "slug": "ml-privacy",
+   "name": "ML Privacy & Model Security",
+   "description": "Privacy attacks against ML (membership inference, model/data extraction, inversion) and federated-learning security.",
+   "keywords": ["membership inference", "model extraction", "model inversion", "model stealing", "federated learning", "gradient leakage", "training data extraction", "privacy attack", "watermarking model"]
+  },
+  {
+   "slug": "privacy-pets",
+   "name": "Privacy-Enhancing Technologies",
+   "description": "Systems and measurements for user privacy: tracking, anonymization, private data sharing, and privacy on the web/mobile.",
+   "keywords": ["privacy", "tracking", "fingerprinting", "anonymization", "data broker", "private information retrieval", "metadata", "location privacy", "advertising", "consent", "gdpr"]
+  },
+  {
+   "slug": "differential-privacy",
+   "name": "Differential Privacy",
+   "description": "Differentially private mechanisms, analytics, and deployments, including local DP.",
+   "keywords": ["differential privacy", "local differential privacy", "dp", "privacy budget", "noise", "private aggregation", "census", "private statistics"]
+  },
+  {
+   "slug": "anonymity-censorship",
+   "name": "Anonymity & Censorship Resistance",
+   "description": "Anonymous communication (Tor, mix nets) and tools to detect or circumvent censorship.",
+   "keywords": ["tor", "anonymity", "onion routing", "mix network", "censorship", "circumvention", "vpn", "deanonymization", "great firewall", "pluggable transport"]
+  },
+  {
+   "slug": "systems-security",
+   "name": "Operating Systems & Systems Security",
+   "description": "Kernel and OS-level security, isolation, sandboxing, virtualization, and access control.",
+   "keywords": ["kernel", "operating system", "sandbox", "isolation", "virtualization", "hypervisor", "container", "access control", "privilege escalation", "syscall", "ebpf", "capability"]
+  },
+  {
+   "slug": "memory-safety",
+   "name": "Memory Safety & Exploitation",
+   "description": "Memory-corruption bugs, exploitation techniques, and mitigations (ASLR, CFI, sanitizers).",
+   "keywords": ["memory safety", "buffer overflow", "use-after-free", "rop", "control-flow integrity", "cfi", "aslr", "exploit", "heap", "stack", "sanitizer", "spatial memory", "rust safety"]
+  },
+  {
+   "slug": "fuzzing",
+   "name": "Fuzzing & Automated Testing",
+   "description": "Fuzzing techniques, coverage-guided testing, and bug-finding pipelines.",
+   "keywords": ["fuzzing", "fuzzer", "coverage-guided", "afl", "libfuzzer", "mutation", "test generation", "symbolic execution fuzzing", "directed fuzzing", "greybox"]
+  },
+  {
+   "slug": "program-analysis",
+   "name": "Program Analysis",
+   "description": "Static/dynamic analysis, symbolic execution, taint tracking, and bug detection for security.",
+   "keywords": ["static analysis", "dynamic analysis", "symbolic execution", "taint analysis", "data flow", "bug detection", "vulnerability detection", "abstract interpretation", "code analysis"]
+  },
+  {
+   "slug": "binary-analysis",
+   "name": "Binary Analysis & Reverse Engineering",
+   "description": "Disassembly, decompilation, binary similarity, and reverse engineering of compiled code.",
+   "keywords": ["binary analysis", "reverse engineering", "disassembly", "decompilation", "binary similarity", "firmware analysis", "obfuscation", "lifting", "rehosting"]
+  },
+  {
+   "slug": "hardware-security",
+   "name": "Hardware Security",
+   "description": "Security of hardware: chips, FPGAs, PUFs, fault injection, and hardware design verification.",
+   "keywords": ["hardware", "fpga", "puf", "fault injection", "rowhammer", "hardware trojan", "chip", "rtl", "asic", "glitch", "voltage"]
+  },
+  {
+   "slug": "side-channels",
+   "name": "Side-Channel & Microarchitectural Attacks",
+   "description": "Timing, cache, power, EM, and speculative-execution (Spectre/Meltdown) side channels and defenses.",
+   "keywords": ["side channel", "cache attack", "spectre", "meltdown", "speculative execution", "transient execution", "timing attack", "power analysis", "electromagnetic", "microarchitecture", "prime+probe", "flush+reload", "covert channel"]
+  },
+  {
+   "slug": "trusted-execution",
+   "name": "Trusted Execution Environments",
+   "description": "TEEs and enclaves (Intel SGX, ARM TrustZone, TDX, SEV), attestation, and confidential computing.",
+   "keywords": ["sgx", "trustzone", "enclave", "trusted execution", "tee", "attestation", "confidential computing", "sev", "tdx", "secure enclave"]
+  },
+  {
+   "slug": "mobile-security",
+   "name": "Mobile Security",
+   "description": "Security and privacy of Android and iOS apps, permissions, app stores, and mobile platforms.",
+   "keywords": ["android", "ios", "mobile app", "permission", "app store", "smartphone", "apk", "mobile malware", "inter-app", "sdk"]
+  },
+  {
+   "slug": "iot-embedded",
+   "name": "IoT & Embedded Security",
+   "description": "Security of IoT devices, embedded systems, firmware, and smart-home ecosystems.",
+   "keywords": ["iot", "embedded", "firmware", "smart home", "smart device", "microcontroller", "rtos", "device", "home assistant", "zigbee", "matter"]
+  },
+  {
+   "slug": "cps-av-security",
+   "name": "Cyber-Physical & Autonomous Vehicle Security",
+   "description": "Security of cyber-physical systems, ICS/SCADA, robotics, drones, and autonomous/connected vehicles.",
+   "keywords": ["cyber-physical", "autonomous vehicle", "self-driving", "lidar", "sensor spoofing", "ics", "scada", "robotics", "drone", "can bus", "actuator", "control system", "automotive"]
+  },
+  {
+   "slug": "wireless-cellular",
+   "name": "Wireless & Cellular Security",
+   "description": "Security of cellular (4G/5G), Wi-Fi, Bluetooth, GPS, and other RF/wireless protocols.",
+   "keywords": ["cellular", "5g", "4g", "lte", "wi-fi", "wifi", "bluetooth", "gps", "rf", "baseband", "sim", "radio", "wpa", "jamming", "gnss"]
+  },
+  {
+   "slug": "authentication",
+   "name": "Authentication & Passwords",
+   "description": "Password security, biometrics, multi-factor and passwordless authentication (FIDO/WebAuthn).",
+   "keywords": ["password", "authentication", "biometric", "two-factor", "mfa", "fido", "webauthn", "passkey", "credential", "login", "account recovery"]
+  },
+  {
+   "slug": "usable-security",
+   "name": "Usable Security & Privacy",
+   "description": "Human factors: user studies, mental models, warnings, and the usability of security and privacy tools.",
+   "keywords": ["usable security", "user study", "human factors", "warning", "mental model", "perception", "survey", "interview", "usability", "developer study", "qualitative"]
+  },
+  {
+   "slug": "malware",
+   "name": "Malware Analysis & Defense",
+   "description": "Detection, classification, and analysis of malware, botnets, and ransomware.",
+   "keywords": ["malware", "botnet", "ransomware", "trojan", "rootkit", "malware detection", "command and control", "packing", "evasive malware", "android malware"]
+  },
+  {
+   "slug": "cybercrime-measurement",
+   "name": "Cybercrime & Internet Measurement",
+   "description": "Empirical measurement of cybercrime, underground economies, abuse, fraud, and large-scale internet ecosystems.",
+   "keywords": ["measurement", "cybercrime", "underground", "fraud", "abuse", "scam", "dark web", "marketplace", "spam", "ecosystem", "large-scale study", "empirical"]
+  },
+  {
+   "slug": "phishing-social",
+   "name": "Phishing & Social Engineering",
+   "description": "Phishing, social engineering, disinformation, and human-targeted deception.",
+   "keywords": ["phishing", "social engineering", "scam", "disinformation", "misinformation", "deception", "fraud email", "impersonation", "spear phishing"]
+  },
+  {
+   "slug": "blockchain",
+   "name": "Blockchain & Smart Contract Security",
+   "description": "Security of blockchains, consensus, cryptocurrencies, DeFi, and smart contracts.",
+   "keywords": ["blockchain", "smart contract", "ethereum", "bitcoin", "cryptocurrency", "defi", "consensus", "solidity", "wallet", "nft", "mev", "transaction"]
+  },
+  {
+   "slug": "mpc-fhe",
+   "name": "Secure Computation (MPC, FHE, ZK)",
+   "description": "Secure multiparty computation, homomorphic encryption, zero-knowledge proofs, and private set operations.",
+   "keywords": ["multiparty computation", "mpc", "homomorphic encryption", "fhe", "zero-knowledge", "zk-snark", "zkp", "private set intersection", "garbled circuit", "oblivious", "secret sharing"]
+  },
+  {
+   "slug": "vuln-discovery",
+   "name": "Vulnerability Discovery & Disclosure",
+   "description": "Finding vulnerabilities at scale, CVE/patch analysis, bug bounties, and disclosure processes.",
+   "keywords": ["vulnerability", "cve", "patch", "bug bounty", "disclosure", "0-day", "n-day", "exploit prediction", "vulnerability management", "patch analysis"]
+  },
+  {
+   "slug": "supply-chain",
+   "name": "Software Supply-Chain Security",
+   "description": "Security of dependencies, package registries, build systems, CI/CD, and code provenance.",
+   "keywords": ["supply chain", "dependency", "package", "npm", "pypi", "build system", "ci/cd", "provenance", "typosquatting", "sbom", "code signing", "reproducible build"]
+  },
+  {
+   "slug": "llm-security",
+   "name": "LLM & Generative-AI Security",
+   "description": "Security and privacy of large language models and generative AI: prompt injection, jailbreaks, and LLM-assisted security.",
+   "keywords": ["large language model", "llm", "prompt injection", "jailbreak", "generative ai", "chatgpt", "gpt", "diffusion model", "ai agent", "llm security", "alignment"]
+  },
+  {
+   "slug": "forensics",
+   "name": "Digital Forensics",
+   "description": "Forensic analysis, attack reconstruction, provenance, and incident response.",
+   "keywords": ["forensics", "provenance", "attack reconstruction", "audit log", "incident response", "threat hunting", "apt detection", "causality", "log analysis"]
+  },
+  {
+   "slug": "formal-methods",
+   "name": "Formal Methods for Security",
+   "description": "Formal verification, proofs, and verified implementations of security-critical systems and protocols.",
+   "keywords": ["formal verification", "proof", "verified", "model checking", "coq", "f-star", "tamarin", "theorem prover", "specification", "verified implementation"]
+  }
+ ]
+}

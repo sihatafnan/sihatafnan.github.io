@@ -1,0 +1,16 @@
+# Minimal Jekyll config. The site historically ran on GitHub Pages defaults
+# (no _config.yml). This adds only safe, additive settings:
+#   * exclude the KB build workspace and tooling from the published site
+#   * a site title
+# Per-page `permalink:` front-matter is used for clean KB URLs (e.g. /usenix/),
+# so NO global permalink is set here (keeps existing note URLs unchanged).
+title: Sihat Afnan
+
+exclude:
+  - scripts/
+  - Gemfile
+  - Gemfile.lock
+  - push.sh
+  - README.md
+  - vendor/
+  - .gitignore

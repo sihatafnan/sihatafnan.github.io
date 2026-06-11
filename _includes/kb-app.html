@@ -1,0 +1,56 @@
+<!-- Knowledge-base app shell. Driven by page front-matter:
+       page.venue_key   e.g. "uss"  (loads /assets/kb/<key>.json)
+       page.venue_title e.g. "USENIX Security"
+     Rendering is done client-side by /js/kb.js (Fuse.js search + timelines). -->
+<div class="container kb-container">
+
+  <header class="kb-header">
+    <a class="kb-back" href="/security-kb/">&larr; All security conferences</a>
+    <h1 class="kb-title">{{ page.venue_title }} <span class="kb-title-sub">Knowledge Base</span></h1>
+    <p class="kb-lede">{{ page.venue_lede }}</p>
+    <div class="kb-stats" id="kb-stats"><span class="kb-muted">Loading papers&hellip;</span></div>
+  </header>
+
+  <div class="kb-controls">
+    <div class="kb-search-wrap">
+      <i class="fas fa-search kb-search-icon"></i>
+      <input id="kb-search" class="kb-search" type="search" autocomplete="off"
+             placeholder="Search {{ page.venue_title }} by topic, title, author, or keyword&hellip;">
+      <button id="kb-clear" class="kb-clear" hidden aria-label="Clear search">&times;</button>
+    </div>
+    <select id="kb-sort" class="kb-sort" aria-label="Sort results">
+      <option value="relevance">Sort: Relevance</option>
+      <option value="citations">Sort: Most cited</option>
+      <option value="newest">Sort: Newest</option>
+      <option value="oldest">Sort: Oldest</option>
+    </select>
+  </div>
+
+  <div class="kb-topics" id="kb-topics" aria-label="Filter by research area"></div>
+
+  <section id="kb-topic-panel" class="kb-topic-panel" hidden>
+    <div class="kb-topic-head">
+      <h2 id="kb-topic-name"></h2>
+      <button id="kb-topic-close" class="kb-topic-close">&times; clear topic</button>
+    </div>
+    <p id="kb-topic-desc" class="kb-topic-desc"></p>
+    <div id="kb-topic-narrative" class="kb-narrative"></div>
+    <ol id="kb-timeline" class="kb-timeline"></ol>
+  </section>
+
+  <div class="kb-results-head">
+    <span id="kb-count" class="kb-muted"></span>
+  </div>
+  <div id="kb-results" class="kb-results"></div>
+  <div id="kb-empty" class="kb-empty" hidden>No papers match. Try a broader keyword or clear filters.</div>
+
+</div>
+
+<script>
+  window.KB = {
+    venueKey: "{{ page.venue_key }}",
+    venueTitle: "{{ page.venue_title }}"
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+<script src="/js/kb.js"></script>
