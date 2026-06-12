@@ -28,6 +28,8 @@ def main() -> None:
     ap.add_argument("--batch", type=int, default=40)
     ap.add_argument("--per-script", type=int, default=1100)
     ap.add_argument("--snippet", type=int, default=240)
+    ap.add_argument("--only-missing", action="store_true",
+                    help="skip papers already present in the venue's llm.json")
     args = ap.parse_args()
 
     tax = json.loads((ASSETS / "taxonomy.json").read_text(encoding="utf-8"))["topics"]
@@ -35,6 +37,11 @@ def main() -> None:
     valid = {t["slug"] for t in tax}
 
     papers = json.loads((BUILD / args.venue / "papers.json").read_text(encoding="utf-8"))
+    if args.only_missing:
+        llm_path = BUILD / args.venue / "llm.json"
+        done = set(json.loads(llm_path.read_text(encoding="utf-8"))) if llm_path.exists() else set()
+        papers = [p for p in papers if p["id"] not in done]
+        print(f"[{args.venue}] {len(papers)} papers still need classification")
     compact = [
         {"id": p["id"], "title": p["title"],
          "snippet": (p.get("abstract") or p.get("tldr") or "")[:args.snippet]}
