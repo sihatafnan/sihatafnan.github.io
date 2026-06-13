@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Persist narrative-workflow output into per-topic sidecar files.
+"""Persist per-venue narrative-workflow output into per-topic sidecar files.
 
-Input: a JSON file containing the Workflow return value, i.e. {"results": [
-  {"slug", "name", "narrative", "milestones": [{"year","paperId","title","note"}]}
-]}. Resolves each milestone's paperId to a paper URL/venue from the assembled
-venue data and writes scripts/kb/build/topics/<slug>.json, which assemble.py then
-copies into assets/kb/topics/.
+Each run is for ONE venue. Results are merged into scripts/kb/build/topics/<slug>.json
+under byVenue[<venue>] = {narrative, milestones}, so a topic file accumulates a
+separate venue-scoped story for each conference. Milestone paperIds are resolved
+to URLs within that venue's assembled data. assemble.py copies these into
+assets/kb/topics/, and js/kb.js loads byVenue[currentVenue].
 
-Usage: python scripts/kb/save_narratives.py --results <file.json> --venue uss
+Usage: python scripts/kb/save_narratives.py --results <file.json> --venue ndss
 """
 from __future__ import annotations
 
@@ -23,23 +23,21 @@ TOPICS_OUT = ROOT / "scripts" / "kb" / "build" / "topics"
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", required=True)
-    ap.add_argument("--venues", default="uss,ndss,sp,ccs")
+    ap.add_argument("--venue", required=True,
+                    help="venue key (uss/ndss/sp/ccs), or 'top4' for the cross-venue combined story")
     args = ap.parse_args()
 
+    # 'top4' resolves milestone paperIds across all venues; a single venue resolves within it.
+    venue_files = ["uss", "ndss", "sp", "ccs"] if args.venue == "top4" else [args.venue]
     by_id: dict[str, dict] = {}
     tax: dict[str, dict] = {}
-    venues_present: list[str] = []
-    for vk in [v.strip() for v in args.venues.split(",") if v.strip()]:
-        path = ASSETS / f"{vk}.json"
-        if not path.exists():
-            continue
-        d = json.loads(path.read_text(encoding="utf-8"))
-        venues_present.append(vk)
+    default_venue = "the Big Four"
+    for vk in venue_files:
+        d = json.loads((ASSETS / f"{vk}.json").read_text(encoding="utf-8"))
         for p in d["papers"]:
             by_id[p["id"]] = p
         for t in d["topics"]:
             tax.setdefault(t["slug"], t)
-    venue_data = {"venue": "the Big Four"}
 
     results = json.loads(Path(args.results).read_text(encoding="utf-8"))
     if isinstance(results, dict):
@@ -56,23 +54,25 @@ def main() -> None:
                 "year": m.get("year"),
                 "title": m.get("title") or (p["title"] if p else ""),
                 "note": m.get("note", ""),
-                "venue": (p or {}).get("venue", venue_data["venue"]),
+                "venue": (p or {}).get("venue", default_venue),
                 "url": (p or {}).get("url"),
                 "paperId": m.get("paperId"),
             })
         milestones.sort(key=lambda x: x.get("year") or 0)
-        topic = {
-            "slug": slug,
-            "name": r.get("name") or tax.get(slug, {}).get("name", slug),
-            "description": tax.get(slug, {}).get("description", ""),
+
+        path = TOPICS_OUT / f"{slug}.json"
+        topic = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        topic.setdefault("slug", slug)
+        topic["name"] = topic.get("name") or r.get("name") or tax.get(slug, {}).get("name", slug)
+        topic["description"] = topic.get("description") or tax.get(slug, {}).get("description", "")
+        topic.setdefault("byVenue", {})
+        topic["byVenue"][args.venue] = {
             "narrative": r.get("narrative", ""),
             "milestones": milestones,
-            "venues": venues_present,
         }
-        (TOPICS_OUT / f"{slug}.json").write_text(
-            json.dumps(topic, ensure_ascii=False, indent=1), encoding="utf-8")
+        path.write_text(json.dumps(topic, ensure_ascii=False, indent=1), encoding="utf-8")
         n += 1
-    print(f"wrote {n} topic narrative files to {TOPICS_OUT.relative_to(ROOT)}")
+    print(f"[{args.venue}] merged {n} topics into {TOPICS_OUT.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

@@ -15,18 +15,42 @@
     tNarr: $("kb-topic-narrative"), timeline: $("kb-timeline"), tClose: $("kb-topic-close")
   };
 
-  var papers = [], topics = [], topicMap = {}, fuse = null;
+  var papers = [], topics = [], topicMap = {};
   var state = { q: "", topic: null, sort: "relevance" };
   var narrativeCache = {};
 
-  fetch("/assets/kb/" + KB.venueKey + ".json")
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(init)
-    .catch(function (e) {
-      els.stats.innerHTML = '<span class="kb-muted">Knowledge base for ' +
-        esc(KB.venueTitle) + ' is being generated &mdash; check back soon.</span>';
-      console.error("KB load failed", e);
+  var loader;
+  if (KB.venueKey === "top4") {
+    // Combined view: load all four venues and merge.
+    loader = Promise.all(["uss", "ndss", "sp", "ccs"].map(function (v) {
+      return fetch("/assets/kb/" + v + ".json").then(function (r) {
+        if (!r.ok) throw new Error(r.status); return r.json();
+      });
+    })).then(mergeVenues);
+  } else {
+    loader = fetch("/assets/kb/" + KB.venueKey + ".json")
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  }
+  loader.then(init).catch(function (e) {
+    els.stats.innerHTML = '<span class="kb-muted">Knowledge base for ' +
+      esc(KB.venueTitle) + ' is being generated &mdash; check back soon.</span>';
+    console.error("KB load failed", e);
+  });
+
+  function mergeVenues(datasets) {
+    var allPapers = [], counts = {}, nameBySlug = {}, descBySlug = {};
+    datasets.forEach(function (d) {
+      allPapers = allPapers.concat(d.papers || []);
+      (d.topics || []).forEach(function (t) {
+        counts[t.slug] = (counts[t.slug] || 0) + t.count;
+        nameBySlug[t.slug] = t.name; descBySlug[t.slug] = t.description;
+      });
     });
+    var mergedTopics = Object.keys(counts).map(function (s) {
+      return { slug: s, name: nameBySlug[s], description: descBySlug[s], count: counts[s] };
+    });
+    return { papers: allPapers, topics: mergedTopics };
+  }
 
   function init(data) {
     papers = (data.papers || []).map(function (p) { p._cites = p.citationCount || 0; return p; });
@@ -34,7 +58,7 @@
     topics.forEach(function (t) { topicMap[t.slug] = t; });
     renderStats(data);
     renderChips();
-    buildFuse();
+    buildIndex();
     wire();
     applyHash();
     render();
@@ -49,17 +73,15 @@
       "</b> research areas" + (withDeep ? " &middot; <b>" + withDeep + "</b> deep-read" : "");
   }
 
-  function buildFuse() {
-    fuse = new Fuse(papers, {
-      includeScore: true, ignoreLocation: true, threshold: 0.34, minMatchCharLength: 2,
-      keys: [
-        { name: "title", weight: 0.42 },
-        { name: "authors", weight: 0.12 },
-        { name: "topicNames", weight: 0.16 },
-        { name: "keyContribution", weight: 0.12 },
-        { name: "abstract", weight: 0.1 },
-        { name: "tldr", weight: 0.08 }
-      ]
+  function buildIndex() {
+    // Precompute a lowercase searchable blob per paper. Title is stored
+    // separately so title hits can be ranked above body hits.
+    papers.forEach(function (p) {
+      p._title = (p.title || "").toLowerCase();
+      p._blob = [
+        p._title, (p.authors || []).join(" "), (p.topicNames || []).join(" "),
+        p.keyContribution || "", p.threatModel || "", p.abstract || "", p.tldr || ""
+      ].join("  ").toLowerCase();
     });
   }
 
@@ -75,24 +97,38 @@
   }
 
   function current() {
-    var list;
-    if (state.q.trim()) {
-      list = fuse.search(state.q).map(function (r) { return r.item; });
-    } else {
-      list = papers.slice();
-    }
-    if (state.topic) {
-      list = list.filter(function (p) { return (p.topics || []).indexOf(state.topic) >= 0; });
-    }
-    var rel = state.sort === "relevance" && state.q.trim();
-    if (!rel) {
-      list.sort(function (a, b) {
-        if (state.sort === "oldest") return a.year - b.year || b._cites - a._cites;
-        if (state.sort === "newest") return b.year - a.year || b._cites - a._cites;
-        return b._cites - a._cites || b.year - a.year; // citations default
-      });
-    }
+    var q = state.q.trim().toLowerCase();
+    var tokens = q ? q.split(/\s+/) : [];
+    // Match each token at a word boundary (prefix): "tor" -> Tor, not author;
+    // "privac" -> privacy. A paper matches only if EVERY token matches somewhere.
+    var rx = tokens.map(function (t) {
+      return new RegExp("\\b" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    });
+    var list = papers.filter(function (p) {
+      if (state.topic && (p.topics || []).indexOf(state.topic) < 0) return false;
+      for (var i = 0; i < rx.length; i++) {
+        if (!rx[i].test(p._blob)) return false;
+      }
+      return true;
+    });
+    var rel = state.sort === "relevance" && tokens.length;
+    list.sort(function (a, b) {
+      if (rel) {
+        var at = titleHits(a, rx), bt = titleHits(b, rx);
+        if (at !== bt) return bt - at; // title hits first, then citations
+        return b._cites - a._cites;
+      }
+      if (state.sort === "oldest") return a.year - b.year || b._cites - a._cites;
+      if (state.sort === "newest") return b.year - a.year || b._cites - a._cites;
+      return b._cites - a._cites || b.year - a.year; // citations default
+    });
     return list;
+  }
+
+  function titleHits(p, rx) {
+    var n = 0;
+    for (var i = 0; i < rx.length; i++) if (rx[i].test(p._title)) n++;
+    return n;
   }
 
   function render() {
@@ -198,7 +234,12 @@
     return fetch("/assets/kb/topics/" + slug + ".json")
       .then(function (r) { return r.ok ? r.json() : null; })
       .catch(function () { return null; })
-      .then(function (n) { narrativeCache[slug] = n; return n; });
+      .then(function (file) {
+        // Topic files hold a venue-scoped story per conference; pick this venue's.
+        var n = (file && file.byVenue && file.byVenue[KB.venueKey]) || null;
+        narrativeCache[slug] = n;
+        return n;
+      });
   }
 
   function renderTimeline(n) {
