@@ -18,6 +18,10 @@
              placeholder="Search {{ page.venue_title }} by topic, title, author, or keyword&hellip;">
       <button id="kb-clear" class="kb-clear" hidden aria-label="Clear search">&times;</button>
     </div>
+    {% if page.venue_key == 'top4' %}
+    <select id="kb-venue" class="kb-sort" aria-label="Filter by conference"></select>
+    <select id="kb-year" class="kb-sort" aria-label="Filter by year"></select>
+    {% endif %}
     <select id="kb-sort" class="kb-sort" aria-label="Sort results">
       <option value="relevance">Sort: Relevance</option>
       <option value="citations">Sort: Most cited</option>

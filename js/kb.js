@@ -9,14 +9,15 @@
   var $ = function (id) { return document.getElementById(id); };
   var els = {
     stats: $("kb-stats"), search: $("kb-search"), clear: $("kb-clear"),
-    sort: $("kb-sort"), topics: $("kb-topics"), results: $("kb-results"),
+    sort: $("kb-sort"), venue: $("kb-venue"), year: $("kb-year"),
+    topics: $("kb-topics"), results: $("kb-results"),
     count: $("kb-count"), empty: $("kb-empty"),
     panel: $("kb-topic-panel"), tName: $("kb-topic-name"), tDesc: $("kb-topic-desc"),
     tNarr: $("kb-topic-narrative"), timeline: $("kb-timeline"), tClose: $("kb-topic-close")
   };
 
   var papers = [], topics = [], topicMap = {};
-  var state = { q: "", topic: null, sort: "relevance" };
+  var state = { q: "", topic: null, sort: "relevance", venue: "all", year: "all" };
   var narrativeCache = {};
 
   var loader;
@@ -58,10 +59,33 @@
     topics.forEach(function (t) { topicMap[t.slug] = t; });
     renderStats(data);
     renderChips();
+    buildFilters();
     buildIndex();
     wire();
     applyHash();
     render();
+  }
+
+  // Conference + year filters (used on the combined /top4 page). Year defaults
+  // to the latest year so a topic opens on the most recent work.
+  function buildFilters() {
+    var yrs = {};
+    papers.forEach(function (p) { if (p.year) yrs[p.year] = true; });
+    var years = Object.keys(yrs).map(Number).sort(function (a, b) { return b - a; });
+    if (els.year && years.length) {
+      els.year.innerHTML = '<option value="all">Year: All</option>' +
+        years.map(function (y) { return '<option value="' + y + '">' + y + "</option>"; }).join("");
+      state.year = String(years[0]);   // default = latest year
+      els.year.value = state.year;
+    }
+    if (els.venue) {
+      var seen = [], order = ["USENIX Security", "NDSS", "IEEE S&P", "ACM CCS"];
+      papers.forEach(function (p) { if (p.venue && seen.indexOf(p.venue) < 0) seen.push(p.venue); });
+      seen.sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); });
+      els.venue.innerHTML = '<option value="all">Conference: All</option>' +
+        seen.map(function (v) { return '<option value="' + esc(v) + '">' + esc(v) + "</option>"; }).join("");
+      els.venue.value = "all";
+    }
   }
 
   function renderStats(data) {
@@ -106,6 +130,8 @@
     });
     var list = papers.filter(function (p) {
       if (state.topic && (p.topics || []).indexOf(state.topic) < 0) return false;
+      if (state.venue !== "all" && p.venue !== state.venue) return false;
+      if (state.year !== "all" && String(p.year) !== state.year) return false;
       for (var i = 0; i < rx.length; i++) {
         if (!rx[i].test(p._blob)) return false;
       }
@@ -139,6 +165,8 @@
     var list = current();
     els.count.textContent = list.length + (list.length === 1 ? " paper" : " papers") +
       (state.topic ? " in " + (topicMap[state.topic] ? topicMap[state.topic].name : state.topic) : "") +
+      (state.venue !== "all" ? " · " + state.venue : "") +
+      (state.year !== "all" ? " · " + state.year : "") +
       (state.q.trim() ? ' matching "' + state.q.trim() + '"' : "");
     els.empty.hidden = list.length !== 0;
     els.results.innerHTML = "";
@@ -285,6 +313,8 @@
     });
     els.clear.onclick = function () { els.search.value = ""; els.clear.hidden = true; state.q = ""; render(); els.search.focus(); };
     els.sort.onchange = function () { state.sort = els.sort.value; render(); };
+    if (els.venue) els.venue.onchange = function () { state.venue = els.venue.value; render(); };
+    if (els.year) els.year.onchange = function () { state.year = els.year.value; render(); };
     els.tClose.onclick = function () { state.topic = null; syncHash(); render(); };
     window.addEventListener("hashchange", function () { applyHash(); render(); });
   }
