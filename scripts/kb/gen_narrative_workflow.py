@@ -54,6 +54,14 @@ def build_topic_inputs(venue_keys: list[str], min_papers: int, cap: int, snippet
         for e in sorted(papers, key=lambda x: x.get("year") or 9999)[:3]:
             if id(e) not in kept_ids:
                 keep.append(e)
+                kept_ids.add(id(e))
+        # Also always include the most RECENT papers (current state of the art, e.g.
+        # 2026): citation-ranking drops them because new papers have few citations,
+        # which would make narratives blind to the latest year.
+        for e in sorted(papers, key=lambda x: -(x.get("year") or 0))[:10]:
+            if id(e) not in kept_ids:
+                keep.append(e)
+                kept_ids.add(id(e))
         compact = [
             {
                 "id": p["id"],
@@ -119,7 +127,7 @@ function prompt(t) {
     list,
     ``,
     `TASKS:`,
-    `1) narrative: Write 2-4 SHORT paragraphs (blank-line separated), in plain, readable language, telling how this area evolved across these top venues: what the earliest listed work tackled, the key shifts/breakthroughs, and where it stands now. Cite specific papers inline by title and year (you may note the venue). Draw connections across venues where relevant. Do NOT invent papers — use only the list above. No markdown headers.`,
+    `1) narrative: Write 2-4 SHORT paragraphs (blank-line separated), in plain, readable language, telling how this area evolved across these top venues: what the earliest listed work tackled, the key shifts/breakthroughs, and where it stands now. Make sure the final paragraph reflects the most recent work shown (including the latest year in the list). Cite specific papers inline by title and year (you may note the venue). Draw connections across venues where relevant. Do NOT invent papers — use only the list above. No markdown headers.`,
     `2) milestones: Choose 5-8 pivotal papers FROM THE LIST that best mark the area's evolution (they may span different venues). For each, return its exact paperId and title (copied verbatim), its year, and a one-clause note on why it mattered. Order chronologically.`,
   ].join('\\n');
 }
