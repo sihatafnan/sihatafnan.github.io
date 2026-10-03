@@ -1,24 +1,27 @@
---- 
-title: Sihat Afnan 
+---
+title: Sihat Afnan
 url: /
 ---
 <!DOCTYPE html>
 <html lang="en-us">
-{% include head.html %}
-<body id="top" data-spy="scroll" data-offset="70" data-target="#navbar-main">
-    {% include search.html %}
-    {% include navigation.html %}
-    <span class="js-widget-page d-none"></span>
-    {% include about.html %}
-    {% include experience.html %}
-    {% include research.html %}
-    {% include coursework.html %}
-    {% include projects.html %}
-    <!-- {% include papers.html %} -->
-    {% include awards.html %}
-    {% include usefullinks.html %}
-    {% include contact.html %}
-    {% include tail-scripts.html %}
-    {% include footer.html %}
+{% include home-head.html %}
+<body>
+    <div class="container">
+        {% include home-header.html %}
+        {% include about.html %}
+        {% include news.html %}
+        {% include research.html %}
+        {% include experience.html %}
+        {% include projects.html %}
+        {% comment %}{% include papers.html %}{% endcomment %}
+        {% include coursework.html %}
+        {% include awards.html %}
+        {% include usefullinks.html %}
+        {% include contact.html %}
+        <footer>
+            &copy; {{ site.time | date: '%Y' }} Sihat Afnan &middot; Last updated {{ site.time | date: '%B %Y' }}
+        </footer>
+    </div>
+    {% include home-scripts.html %}
 </body>
 </html>

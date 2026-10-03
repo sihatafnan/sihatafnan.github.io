@@ -1,66 +1,58 @@
-<section id="research" class="home-section wg-pages">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-lg-4 section-heading">
-                <h1>Research Experience</h1>
+<section id="publications">
+    <h2>Publications <span class="h2-note">&middot; <a href="https://scholar.google.com/citations?user=3i1WVCcAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a></span></h2>
+
+    <div class="year-section">
+        <div class="year-header">2026</div>
+        <div class="publication">
+            <div class="publication-title">Who Moved the Robot? Humanoid Datasets Remember Their Operators</div>
+            <div class="publication-meta">
+                <div class="publication-authors"><strong>Sihat Afnan</strong>, Unnat Jain, Habiba Farrukh</div>
+                <div class="publication-venue">NeurIPS 2026 <span class="badge accepted">Accepted</span></div>
             </div>
-            <div class="col-12 col-lg-8">
-                <div class="card-simple">
-                    <h3 class="article-title mb-1 mt-3">
-                        Security &amp; Privacy of Embodied AI
-                    </h3>
-                    <div class="article-style">
-                        <p>
-                            Motion retargeting, which maps a human operator's demonstrations onto a shared robot skeleton, is widely assumed to be a lossy, anonymizing projection. Showed that this map is effectively invertible: retargeted joint-angle trajectories still carry movement dynamics shaped by the operator's physiology. Introduced UNVEIL, a skeleton-aware spatiotemporal graph network that recovers operator gender, identity, and age/height from retargeted robot motion alone, generalizing to unseen operators, tasks, and retargeting implementations. As humanoid teleoperation datasets are increasingly shared at scale, this turns them into a biometric fingerprint of the people who recorded them.
-                        </p>
-                        <p>
-                            <strong>Status:</strong> Accepted at NeurIPS 2026
-                        </p>
-                    </div>
-                </div>
-                <div class="card-simple">
-                    <h3 class="article-title mb-1 mt-3">
-                        Security of AR/VR Systems
-                    </h3>
-                    <div class="article-style">
-                        <p>
-                            Investigated the security of XR spatial understanding pipelines by designing the first on-device acoustic attack that uses only a headset's built-in speakers to subtly manipulate 3D scene reconstruction. Modeled how injected acoustic interference perturbs camera odometry, RGB imaging, and depth sensing, and developed an optimization framework that generates perturbations causing controlled geometric distortions in the spatial map. Demonstrated impactful effects including object addition/removal, surface misclassification, and degraded user task performance across Meta Quest 3S, Apple iPad, and ARIA glasses, with real-world experiments on Quest 3S showing corruption in over 91% of spatial maps.
-                        </p>
-                        <p>
-                            <strong>Status:</strong> Under review at IEEE S&amp;P (Oakland) 2027
-                        </p>
-                    </div>
-                </div>
-                <div class="card-simple">
-                    <h3 class="article-title mb-1 mt-3">
-                        Autonomous Vehicle Security
-                    </h3>
-                    <div class="article-style">
-                        <p>
-                            Developing a high-fidelity VR simulation framework using CARLA to study how human drivers perceive and react to autonomous vehicle misbehavior caused by sensor-level perception attacks such as stop sign manipulation, lane detection failures, and phantom obstacles. The project integrates a realistic AV stack, including sensor simulation, machine-learning based perception, planning, and control, together with real-time eye-tracking and behavioral logging. This work addresses key challenges in synchronizing multi-modal sensor data, attack injection, and human&ndash;autonomy interaction in VR, enabling systematic evaluation of AV safety under adversarial conditions.
-                        </p>
-                        <p>
-                            <strong>Status:</strong> Under review at USENIX Security 2027
-                        </p>
-                    </div>
-                </div>
-                <div class="card-simple">
-                    <h3 class="article-title mb-1 mt-3">
-                        LLM Based Threat Detection
-                    </h3>
-                    <div class="article-style">
-                        <p>
-                            A framework designed to detect APT attack patterns leveraging the power of self-attention in transformers. We incorporate customized embedding layers to effectively capture the context of event sequences derived from provenance graphs. While acknowledging the computational overhead associated with training transformer networks, our framework surpasses existing LSTM and Language models regarding APT detection performance. We integrated the model parameters and training procedure from the RoBERTa model and conducted extensive experiments on well-known APT datasets (DARPA OpTC and DARPA TC E3). Our framework achieved superior F1 scores of 98% and 95% on the two datasets respectively, surpassing the F1 scores of 96% and 94% obtained by LSTM models. Our findings suggest that LogShield's performance benefits from larger datasets and demonstrates its potential for generalization across diverse domains.
-                        </p>
-                        <p>
-                            <strong>Status:</strong> <a href="https://arxiv.org/abs/2311.05733" target="_blank" rel="noopener">ArXiv</a>
-                        </p>
-                    </div>
-                </div>
+            <p class="publication-summary">
+                Motion retargeting, which maps a human operator's demonstrations onto a shared robot skeleton, is widely assumed to be a lossy, anonymizing projection. We show the map is effectively invertible: UNVEIL, a skeleton-aware spatiotemporal graph network, recovers operator gender, identity, and age/height from retargeted robot motion alone, generalizing to unseen operators, tasks, and retargeting implementations. Shared humanoid teleoperation datasets can therefore act as a biometric fingerprint of the people who recorded them.
+            </p>
+        </div>
+    </div>
+
+    <div class="year-section">
+        <div class="year-header">Under Review</div>
+        <div class="publication">
+            <div class="publication-title">Who's Watching the Road? Revisiting Physical Adversarial Attacks on Autonomous Driving in the Presence of Human Drivers</div>
+            <div class="publication-meta">
+                <div class="publication-authors"><strong>Sihat Afnan</strong>, Mutahar Ali, Chi Zhang, Praneetsai Vasu Iddamsetty, Mohammad Al Faruque, Qi Alfred Chen, Habiba Farrukh</div>
+                <div class="publication-venue">USENIX Security 2027 <span class="badge review">Under Review</span></div>
+            </div>
+            <p class="publication-summary">
+                Revisits physical adversarial attacks on autonomous driving with the human driver back in the loop. Built a high-fidelity CARLA-based VR simulator integrating a full AV stack (sensor simulation, ML perception, planning, control) with real-time eye tracking and behavioral logging, and used it to measure whether and how quickly drivers notice and recover from stop-sign manipulation, lane-detection failures, and phantom obstacles.
+            </p>
+        </div>
+        <div class="publication">
+            <div class="publication-title">Manipulating XR Spatial Understanding Using On-Device Speakers</div>
+            <div class="publication-meta">
+                <div class="publication-authors"><strong>Sihat Afnan</strong>, Habiba Farrukh</div>
+                <div class="publication-venue">IEEE S&amp;P (Oakland) 2027 <span class="badge review">Under Review</span></div>
+            </div>
+            <p class="publication-summary">
+                The first on-device acoustic attack on XR spatial understanding: an optimization framework drives a headset's own built-in speakers to perturb camera odometry, RGB imaging, and depth sensing, producing controlled geometric distortions in the reconstructed 3D map with no added hardware. Demonstrated object addition/removal, surface misclassification, and degraded user task performance across Meta Quest 3S, Apple iPad, and Project Aria glasses, corrupting over 91% of spatial maps in real-world Quest 3S trials.
+            </p>
+        </div>
+    </div>
+
+    <div class="year-section">
+        <div class="year-header">Preprints</div>
+        <div class="publication">
+            <div class="publication-title">LogShield: A Transformer-based Advanced Persistent Threat Detection System Leveraging Self-Attention</div>
+            <div class="publication-meta">
+                <div class="publication-authors"><strong>Sihat Afnan</strong>*, Mushtari Sadia*, Shahrear Iqbal, Anindya Iqbal <span class="h2-note">(*equal contribution)</span></div>
+                <div class="publication-venue">arXiv 2023</div>
+            </div>
+            <p class="publication-summary">
+                A self-attention framework for detecting APT patterns in event sequences derived from system provenance graphs, reaching F1 scores of 98% and 95% on DARPA OpTC and DARPA TC E3, compared with 96% and 94% for LSTM baselines.
+            </p>
+            <div class="publication-links">
+                <a href="https://arxiv.org/abs/2311.05733" target="_blank" rel="noopener">PDF</a>
             </div>
         </div>
-        </br>
-        </br>
-        </br>
     </div>
 </section>
