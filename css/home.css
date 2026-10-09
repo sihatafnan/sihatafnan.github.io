@@ -354,6 +354,14 @@ h3.sub-heading {
     background: linear-gradient(135deg, #ff5a3c 0%, #ff2600 55%, #db1f00 100%);
 }
 
+.badge.award {
+    background: linear-gradient(135deg, #ff5a3c 0%, #ff2600 55%, #db1f00 100%);
+}
+
+.news-timeline details.more summary {
+    margin: 0 0 0.9em;
+}
+
 .badge.review {
     background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
 }
