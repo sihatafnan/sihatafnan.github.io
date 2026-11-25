@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>UNVEIL release thread</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fbfbfa; --card:#ffffff; --fg:#17181c; --muted:#5f6570; --line:#e4e4e0;
+  --accent:#d9483b; --tag:#eef0f4; --warn-bg:#fff6e6; --warn-fg:#7a4b00; --todo-bg:#eef4ff; --todo-fg:#1f4b99;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#111317; --card:#181b21; --fg:#eceef2; --muted:#a0a7b4; --line:#2a2f38;
+    --accent:#ff7a6b; --tag:#232833; --warn-bg:#2d2414; --warn-fg:#f3c77a; --todo-bg:#16233a; --todo-fg:#9cc0ff;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#111317; --card:#181b21; --fg:#eceef2; --muted:#a0a7b4; --line:#2a2f38;
+  --accent:#ff7a6b; --tag:#232833; --warn-bg:#2d2414; --warn-fg:#f3c77a; --todo-bg:#16233a; --todo-fg:#9cc0ff;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; }
+main { max-width:860px; margin:0 auto; padding:48px 16px 96px; }
+a { color:var(--accent); }
+h1 { font-size:30px; line-height:1.25; margin:0 0 6px; letter-spacing:-0.015em; }
+h2 { font-size:19px; margin:0; }
+.sub { color:var(--muted); margin:0 0 28px; }
+.vers { display:flex; gap:8px; flex-wrap:wrap; margin:0 0 20px; font-size:14px; }
+.vers span { background:var(--tag); padding:2px 10px; border-radius:99px; }
+.note { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px 20px; margin:0 0 28px; }
+.note h3 { margin:0 0 8px; font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); }
+.note ul { margin:0; padding-left:20px; }
+.note li { margin:4px 0; }
+.tweet { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin:0 0 22px; }
+.tweet header { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+.tweet .k { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+.text { white-space:pre-wrap; font-size:16.5px; margin:0 0 6px; }
+.count { font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.count.over { color:var(--accent); font-weight:600; }
+video, .ph { width:100%; border-radius:8px; display:block; margin-top:12px; background:#000; }
+.ph { aspect-ratio:16/9; background:var(--tag); color:var(--muted); display:flex; align-items:center; justify-content:center; text-align:center; padding:24px; font-size:15px; }
+.media-desc { font-size:14px; color:var(--muted); margin:8px 0 0; }
+.flag { background:var(--warn-bg); color:var(--warn-fg); border-radius:8px; padding:10px 14px; margin-top:12px; font-size:14.5px; }
+.todo { background:var(--todo-bg); color:var(--todo-fg); border-radius:8px; padding:10px 14px; margin-top:12px; font-size:14.5px; }
+.flag b, .todo b { font-weight:600; }
+code { font-size:0.92em; background:var(--tag); padding:1px 5px; border-radius:4px; }
+footer { color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="sub" style="margin:0 0 4px;"><a href="../">Research releases</a></p>
+  <h1>UNVEIL: release thread draft</h1>
+  <p class="sub">Who Moved the Robot? Humanoid Datasets Remember Their Operators · Sihat Afnan, Unnat Jain, Habiba Farrukh</p>
+
+  <div class="vers"><span><b>v2</b> · 2026-11-24 (current)</span><span>v1 · 2026-11-24</span></div>
+
+  <div class="note">
+    <h3>About this cut</h3>
+    <ul>
+      <li>The structure follows Unnat's notes. The anchor video shows the result with no explanation. Each later tweet makes one point.</li>
+      <li>The anchor video uses the hip-hop clip that is already on the project page. It runs 30 s, at 1920×1080, with no sound.</li>
+      <li>The 3D shots are rendered frame by frame from the project page's real G1 trajectory and SMPL meshes. The charts are made with Manim.</li>
+      <li>Every number comes from the paper or from the BONES-SEED manifests. Sample sizes are given next to the numbers.</li>
+      <li>All tweets have media now except tweet 6, which is text only.</li>
+    </ul>
+    <h3 style="margin-top:14px">Changes in v2</h3>
+    <ul>
+      <li>Added the tweet 2 video: the Fig. 4 pair, two robots side by side with live waist-speed traces.</li>
+      <li>Added the tweet 4 video (how strong the leakage is) and the tweet 5 video (survey and anonymizer). Both are made with Manim.</li>
+      <li>Trimmed tweets 1, 2, 4 and 5 to 280 characters or fewer.</li>
+    </ul>
+  </div>
+
+  <!-- ===================== TWEET 1 ===================== -->
+  <section class="tweet">
+    <header><h2>1 · Anchor</h2><span class="k">video for a broad audience</span></header>
+<p class="text" data-count>Humanoid robots learn from teleoperation data. Retargeting maps every operator onto one robot body, so the data is treated as anonymous.
+
+It isn't. From the robot's joint motion alone, we recover the operator's age, gender, height, weight and identity.
+
+https://unveil-humanoid-operators.github.io 🧵</p>
+    <div class="count"></div>
+    <video src="media/anchor_v1.mp4" poster="media/anchor_v1_poster.jpg" controls muted playsinline preload="metadata"></video>
+    <p class="media-desc">0–6 s: a person dances (motion capture). 6–12 s: the same dance retargeted onto a Unitree G1. 13–20 s: only the robot is left, and the predicted attributes appear next to the true ones. 20–26 s: a body drawn from the predicted attributes dances beside the robot. 26–30 s: closing title.</p>
+    <div class="flag"><b>Check before posting:</b> the actual operator in this clip is male, 22 yr, 175 cm, 76 kg. That matches BONES-SEED operator A308, who is in the <b>training</b> split. If the prediction (male, 25 yr, 172 cm, 72 kg) came from the seen-operator protocol, the video should not suggest that UNVEIL had never seen this person. The alternative is to switch to a clip from an unseen operator.</div>
+    <div class="flag"><b>Wording:</b> the body on the right in the final shot is an SMPL mesh shaped from the four predicted numbers and posed with the human motion. UNVEIL itself outputs only the attributes and an identity. The on-screen label says "body drawn from the predicted attributes".</div>
+  </section>
+
+  <!-- ===================== TWEET 2 ===================== -->
+  <section class="tweet">
+    <header><h2>2 · Why it happens</h2><span class="k">one insight</span></header>
+<p class="text" data-count>Why? Retargeting matches the robot's pose to the human's, frame by frame. Nothing constrains how fast joints move between frames.
+
+So each operator's speed, range and rhythm pass into the robot data. Same routine, two operators: the 60-year-old's robot twists its waist 3× slower.</p>
+    <div class="count"></div>
+    <video src="media/t2_pair_v1.mp4" poster="media/t2_pair_v1_poster.jpg" controls muted playsinline preload="metadata"></video>
+    <p class="media-desc">0–13.5 s: two G1 robots perform the same routine, <code>dancing_routine_V001_003</code>, at real speed. Under each robot, a live trace shows its waist speed over the last 4 s, with the running average as a dashed line. 14–21 s: the averages over the whole routine, 45.3 vs 14.0 °/s. This is the paper's Fig. 4 pair: A308 (22 yr) and A276 (60 yr). The speeds are recomputed with the paper's feature code (<code>compute_multi_axis_features</code>, the waist's 3 axes, 120 fps) and match Fig. 4 to 0.01 °/s.</p>
+    <div class="flag"><b>Timing:</b> the older operator took 20.4 s for the routine and the younger one 12.9 s. The video plays the first 12.5 s of each take, side by side. So the robots are not at the same point in the choreography at the same moment. The running averages at 12.5 s are 46.4 and 16.7 °/s. The closing card shows the whole-routine averages.</div>
+    <div class="flag"><b>Confound:</b> the two operators in this pair also differ in weight: 76 kg vs 120 kg. A single pair cannot separate age from weight. Tweet 3 shows the population result. The paper's partial correlations control for the other attributes (waist range of motion vs age, r<sub>partial</sub> = −0.25).</div>
+  </section>
+
+  <!-- ===================== TWEET 3 ===================== -->
+  <section class="tweet">
+    <header><h2>3 · It holds across the population</h2><span class="k">one insight</span></header>
+<p class="text" data-count>This is not one hand-picked pair. Across BONES-SEED's dancing clips, robots driven by operators aged 55+ twist their waist more slowly than robots driven by operators aged 22 or younger.
+
+Median 19.7 vs 25.1 °/s, 29 vs 19 operators, p = 0.008.</p>
+    <div class="count"></div>
+    <video src="media/t3_population_v1.mp4" poster="media/t3_population_v1_poster.jpg" controls muted playsinline preload="metadata"></video>
+    <p class="media-desc">Manim. Each dot is one operator: the median waist speed over all of that operator's dancing clips. The test is a two-sided Mann-Whitney U test on the per-operator medians.</p>
+    <div class="flag"><b>Differs from the paper's Fig. 4:</b> the paper plots one dot per <i>clip</i>. With duplicates removed, that is 832 young clips and 154 old clips. But 756 of the 832 young clips (91%) come from only 4 operators: A313, A311, A308 and A306. Counted per clip, the young median is 56.8 °/s. Counted per operator, it is 25.1 °/s. The per-clip p-value (about 10<sup>−63</sup>) treats clips from the same person as independent. That is why this cut uses one dot per operator. The effect is smaller this way but still significant.</div>
+  </section>
+
+  <!-- ===================== TWEET 4 ===================== -->
+  <section class="tweet">
+    <header><h2>4 · How strong the leakage is</h2><span class="k">one insight</span></header>
+<p class="text" data-count>How much leaks? 522 operators, 142K robot trajectories.
+
+Known operators, new clips: 97.2% top-1 re-ID (chance 0.2%).
+Never-seen operators: 83.4% gender accuracy; median error 2.1 yr age, 3.9 cm height, 5.3 kg weight.
+
+Holds across 3 retargeting pipelines.</p>
+    <div class="count"></div>
+    <video src="media/t4_leakage_v1.mp4" poster="media/t4_leakage_v1_poster.jpg" controls muted playsinline preload="metadata"></video>
+    <p class="media-desc">Manim, 15 s. Part 1: re-ID top-1, 97.2% against a 0.2% random guess. Part 2: gender accuracy on never-seen operators under three retargeting pipelines (83.4 / 80.9 / 76.1%) against the 50% chance line. Part 3: median errors for age, height and weight. All numbers are from Tab. 1.</p>
+    <div class="flag"><b>Sample size not in the video:</b> <code>split_summary.json</code> lists 99 never-seen test operators and 15,002 test clips. I am inferring that Tab. 1 used this split. Please confirm before we quote "99 operators" anywhere.</div>
+    <div class="todo"><b>Option:</b> add a bar for the 2-layer MLP baseline, which reaches 85.3% re-ID and 79.4% unseen-operator gender. It shows the leakage does not depend on UNVEIL's architecture. It is left out to keep the video short.</div>
+  </section>
+
+  <!-- ===================== TWEET 5 ===================== -->
+  <section class="tweet">
+    <header><h2>5 · Why it matters</h2><span class="k">one insight</span></header>
+<p class="text" data-count>Does this matter to operators? In a 100-person survey, 73% believed retargeting hides who they are. After learning it doesn't, 63% of those willing to contribute withdrew.
+
+A first anonymizer cuts re-ID from 97.2% to 16.8%, but tracking success falls from 91.8% to 72.3%.</p>
+    <div class="count"></div>
+    <video src="media/t5_matters_v1.mp4" poster="media/t5_matters_v1_poster.jpg" controls muted playsinline preload="metadata"></video>
+    <p class="media-desc">Manim, 15 s. Part 1: survey bars, 73% believed retargeting hides the operator and 63% withdrew. Part 2: anonymizer trade-off, with re-ID 97.2 → 16.8% next to tracking success 91.8 → 72.3% (Tab. 4).</p>
+    <div class="flag"><b>Denominator:</b> the 63% is a share of the participants who were initially willing, not of all 100. The paper does not say how many that was. The video's footnote states the denominator in words. If you have the count, we can add it.</div>
+  </section>
+
+  <!-- ===================== TWEET 6 ===================== -->
+  <section class="tweet">
+    <header><h2>6 · Closing</h2><span class="k">text only</span></header>
+<p class="text" data-count>We think operator privacy should be part of how the community collects and shares humanoid data.
+
+Joint work with [Unnat handle] and [Habiba handle] at UC Irvine. To appear at NeurIPS 2026.
+
+Project: https://unveil-humanoid-operators.github.io
+Code: https://github.com/unveil-humanoid-operators/UNVEIL</p>
+    <div class="count"></div>
+    <div class="todo"><b>To fill in:</b> X handles for Unnat and Habiba. Add an arXiv link once the paper is public.</div>
+  </section>
+
+  <section class="tweet">
+    <header><h2>LinkedIn</h2><span class="k">one post, for Habiba to adapt</span></header>
+    <p style="margin:0">This reuses the anchor video, with a longer version of the text from tweets 1, 3 and 5, and a link to the X thread.</p>
+  </section>
+
+  <footer>Draft for internal review. Not linked from the main site.</footer>
+</main>
+<script>
+// Character count with X's weighting: each URL counts as 23, most emoji count as 2, Latin text counts as 1.
+document.querySelectorAll('[data-count]').forEach(p => {
+  const txt = p.textContent.trim();
+  let n = 0;
+  const noUrls = txt.replace(/https?:\/\/\S+/g, () => { n += 23; return ''; });
+  for (const ch of noUrls) n += /\p{Extended_Pictographic}/u.test(ch) ? 2 : 1;
+  const el = p.parentElement.querySelector('.count');
+  el.textContent = n + ' / 280 characters (X weighting)' + (n > 280 ? ', over the limit: the rest folds behind "Show more"' : '');
+  if (n > 280) el.classList.add('over');
+});
+</script>
+</body>
+</html>
