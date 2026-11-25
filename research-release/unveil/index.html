@@ -57,7 +57,7 @@ footer { color:var(--muted); font-size:14px; margin-top:40px; }
   <h1>UNVEIL: release thread draft</h1>
   <p class="sub">Who Moved the Robot? Humanoid Datasets Remember Their Operators · Sihat Afnan, Unnat Jain, Habiba Farrukh</p>
 
-  <div class="vers"><span><b>v3</b> · 2026-11-24 (current)</span><span>v2 · 2026-11-24</span><span>v1 · 2026-11-24</span></div>
+  <div class="vers"><span><b>v4</b> · 2026-11-25 (current)</span><span>v3 · 2026-11-24</span><span>v2 · 2026-11-24</span><span>v1 · 2026-11-24</span></div>
 
   <!-- ===================== TWEET 1 ===================== -->
   <section class="tweet">
@@ -68,19 +68,17 @@ It isn't. From the robot's joint motion alone, we recover the operator's age, ge
 
 https://unveil-humanoid-operators.github.io 🧵</p>
     <div class="count"></div>
-    <video src="media/anchor_v1.mp4" poster="media/anchor_v1_poster.jpg" controls muted playsinline preload="metadata"></video>
-    <p class="media-desc">0–6 s: a person dances (motion capture). 6–12 s: the same dance retargeted onto a Unitree G1. 13–20 s: only the robot is left, and the predicted attributes appear next to the true ones. 20–26 s: a body drawn from the predicted attributes dances beside the robot. 26–30 s: closing title.</p>
+    <video src="media/release_v1.mp4" poster="media/release_v1_poster.jpg" controls muted playsinline preload="metadata"></video>
+    <p class="media-desc">41 s, one video. 0–5 s: a person dances (motion capture). 5–11 s: the dance is retargeted onto a Unitree G1. 11–20 s: only the robot is left; its motion passes through UNVEIL, which outputs the operator's gender, age, height and weight. 20–23 s: "How can motion reveal the operator?", and the robot splits into two. 23–33 s: the same dance routine from a 22-year-old and a 60-year-old operator, with live waist-speed traces. 33–37 s: whole-routine mean waist speed, 45.3 vs 14.0 °/s (paper Fig. 4 pair). 37–41 s: closing title.</p>
   </section>
 
   <!-- ===================== TWEET 2 ===================== -->
   <section class="tweet">
-    <header><h2>2 · Why it happens</h2><span class="k">one insight</span></header>
+    <header><h2>2 · Why it happens</h2><span class="k">text only; the video in tweet 1 shows it</span></header>
 <p class="text" data-count>Why? Retargeting matches the robot's pose to the human's, frame by frame. Nothing constrains how fast joints move between frames.
 
 So each operator's speed, range and rhythm pass into the robot data. Same routine, two operators: the 60-year-old's robot twists its waist 3× slower.</p>
     <div class="count"></div>
-    <video src="media/t2_pair_v1.mp4" poster="media/t2_pair_v1_poster.jpg" controls muted playsinline preload="metadata"></video>
-    <p class="media-desc">0–13.5 s: two G1 robots perform the same routine, <code>dancing_routine_V001_003</code>, at real speed. Under each robot, a live trace shows its waist speed over the last 4 s, with the running average as a dashed line. 14–21 s: the averages over the whole routine, 45.3 vs 14.0 °/s. This is the paper's Fig. 4 pair: A308 (22 yr) and A276 (60 yr). The speeds are recomputed with the paper's feature code (<code>compute_multi_axis_features</code>, the waist's 3 axes, 120 fps) and match Fig. 4 to 0.01 °/s.</p>
   </section>
 
   <!-- ===================== TWEET 3 ===================== -->
